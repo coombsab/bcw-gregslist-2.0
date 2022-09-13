@@ -3,6 +3,8 @@
  * 
  */
 
+import { setText } from "../Utils/Writer.js"
+
 export class Job {
   constructor(data) {
     this.company = data.company
@@ -16,14 +18,20 @@ export class Job {
     return /*html*/`
       <div class="col-md-4 col-lg-3 mb-3">
         <div class="card">
-          <div class="card-body">
-            <h5 class="text-uppercase">
-              ${this.jobTitle} with ${this.company}
-            </h5>
+        <div class="card-header">
+          <h5 class="text-uppercase">
+            ${this.jobTitle} with ${this.company}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3 controls">
+            <i class="mdi mdi-human-edit selectable" data-bs-toggle="offcanvas" data-bs-target="#rightBar" onclick="app.jobsController.beginEdit('${this.id}')"> Edit</i>
+            <i class="mdi mdi-delete selectable" onclick="app.jobsController.deleteJob('${this.id}')"></i>
+          </div>
             <p>
               <strong>$${this.rate} per hr</strong>
             </p>
-            <p>${this.hours} per week</p>
+            <p>${this.hours} hrs per week</p>
             <p>${this.description}</p>
           </div>
         </div>
@@ -33,67 +41,45 @@ export class Job {
 
   /**
    * 
-   * @param {Job} editable 
+   * @param {Job} [editable]
    * @returns 
    */
   static getJobForm(editable) {
+    // setText("add-listing", "Add Job")
+    // setText("rightBarLabel", "Add Job")
     editable = editable || new Job({ company: "", jobTitle: "", hours: 0, rate: 0, description: "" })
 
     return /*html*/ `
-    <form onsubmit="app.jobsController.addJob()">
+    <form onsubmit="app.jobsController.handleSubmit()">
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" name="company" required minlength="2" maxlength="20">
+        <input type="text" class="form-control" name="company" required minlength="2" maxlength="20" value="${editable.company}">
         <label for="company">Company</label>
       </div>
     
       <div class="form-floating mb-3">
-        <input type="text" class="form-control" name="jobTitle" required>
+        <input type="text" class="form-control" name="jobTitle" required value="${editable.jobTitle}">
         <label for="jobTitle">Job Title</label>
       </div>
     
       <div class="form-floating mb-3">
-        <input type="number" class="form-control" name="hours" required min="1" max="200">
+        <input type="number" class="form-control" name="hours" required min="1" max="200" value="${editable.hours}">
         <label for="hours">Hours per week</label>
       </div>
     
       <div class="form-floating mb-3">
-        <input type="number" class="form-control" name="rate" required min="0">
+        <input type="number" class="form-control" name="rate" required min="0" value="${editable.rate}">
         <label for="rate">Rate in $ per hour</label>
       </div>
       
       <div class="form-floating">
-        <textarea class="form-control" placeholder="Describe your job" name="description"></textarea>
+        <textarea class="form-control" placeholder="Describe your job" name="description">${editable.description}</textarea>
         <label for="description">Description</label>
       </div>
     
       <div class="d-flex my-4 gap-5 align-items-center">
         <button class="btn" type="reset">Cancel</button>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">${editable.id ? "Save Changes" : "Add Job"}</button>
       </div>
     `
   }
 }
-
-
-// NOTE Job object requirements
-// {
-//   "company": {
-//     "type": "String",
-//     "required": true
-//   },
-//   "jobTitle": {
-//     "type": "String",
-//     "required": true
-//   },
-//   "hours": {
-//     "type": "Number",
-//     "required": true
-//   },
-//   "rate": {
-//     "type": "Number",
-//     "required": true
-//   },
-//   "description": {
-//     "type": "String"
-//   }
-// }

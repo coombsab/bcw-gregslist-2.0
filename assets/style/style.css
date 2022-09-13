@@ -1,1 +1,9 @@
 /* BASIC STYLES HERE */
+
+.controls {
+  font-size: 12px;
+}
+
+img {
+  max-height: 15rem;
+}

@@ -1,3 +1,5 @@
+import { setText } from "../Utils/Writer.js"
+
 export class Car {
   /**
    * The data needed to make a car
@@ -19,6 +21,10 @@ export class Car {
       <div class="card">
         <img src="${this.imgUrl}" alt="${this.make}-${this.model}" class="img-fluid">
         <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-3 controls">
+            <i class="mdi mdi-database-edit selectable" data-bs-toggle="offcanvas" data-bs-target="#rightBar" onclick="app.carsController.beginEdit('${this.id}')"> Edit</i>
+            <i class="mdi mdi-delete selectable" onclick="app.carsController.deleteCar('${this.id}')"></i>
+          </div>
           <h5 class="text-uppercase">
             ${this.make} | ${this.model} ${this.year}
           </h5>
@@ -26,10 +32,6 @@ export class Car {
             <strong>$ ${this.price}</strong>
           </p>
           <p>${this.description}</p>
-        </div>
-        <div class="card-footer d-flex align-items-center justify-content-around">
-          <button class="btn text-uppercase" onclick="app.carsController.deleteCar('${this.id}')">Delete</button>
-          <button class="btn text-uppercase text-success" data-bs-toggle="offcanvas" data-bs-target="#rightBar" onclick="app.carsController.beginEdit('${this.id}')">Edit</button>
         </div>
       </div>
     </div>
@@ -40,8 +42,8 @@ export class Car {
   // TODO using an editable...
   /**@param {Car} [editable] */
   static getCarForm(editable) {
-
-
+    // setText("add-listing", "Add Car")
+    // setText("rightBarLabel", "Add Car")
     editable = editable || new Car({ description: '', imgUrl: ' ', make: '', model: '', price: 0, year: 1990 })
 
     return /*html*/`
@@ -78,7 +80,7 @@ export class Car {
 
         <div class="d-flex my-4 gap-5 align-items-center">
           <button class="btn" type="reset">Cancel</button>
-          <button class="btn btn-primary" type="submit">${editable.id ? 'Save Changes' : 'Create'}</button>
+          <button class="btn btn-primary" type="submit">${editable.id ? 'Save Changes' : 'Add Car'}</button>
         </div>
       </form>
       `

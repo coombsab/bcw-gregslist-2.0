@@ -3,7 +3,7 @@ import { Car } from "../Models/Car.js"
 import { carsService } from "../Services/CarsService.js"
 import { getFormData } from "../Utils/FormHandler.js"
 import { Pop } from "../Utils/Pop.js"
-import { setHTML } from "../Utils/Writer.js"
+import { setHTML, setText } from "../Utils/Writer.js"
 
 function drawCars() {
   let template = ''
@@ -47,10 +47,10 @@ export class CarsController {
         await carsService.editCar(formData)
       } else {
         await carsService.addCar(formData)
+        // @ts-ignore
+        form.reset()
       }
 
-      // @ts-ignore
-      form.reset()
     } catch (error) {
       console.error('[AddCar]', error)
       Pop.error(error)
@@ -59,6 +59,8 @@ export class CarsController {
 
   async deleteCar(id) {
     try {
+      const yes = await Pop.confirm('Delete the Car?')
+      if (!yes) { return } // FULL STOP
       await carsService.deleteCar(id)
     } catch (error) {
       console.error('[DeletingCar]', error)
@@ -77,6 +79,7 @@ export class CarsController {
     // TWO JOBS find the car by its id
     // and then what??? 
     // Then fill in the form with all the values
+    // setText("rightBarLabel", "Edit Car")
     carsService.setActiveCar(id)
     const editable = appState.activeCar
     const template = Car.getCarForm(editable)
